@@ -1,0 +1,280 @@
+{
+  "info": {
+    "_postman_id": "a7c1f9e0-4c9d-4d62-9f28-1b8f0c010001",
+    "name": "FleetFlow TMS — API Collection (Phases 2 & 3)",
+    "description": "Authentication, Vehicles, Drivers, and Routes endpoints for FleetFlow TMS.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" },
+    { "key": "vehicleId", "value": "", "type": "string" },
+    { "key": "driverId", "value": "", "type": "string" },
+    { "key": "routeId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+          }
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [{ "listen": "test", "script": { "exec": ["const j = pm.response.json(); if (j.accessToken) pm.collectionVariables.set('accessToken', j.accessToken);"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@tms.com\",\n  \"password\": \"Admin@123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Login (Dispatcher)",
+          "event": [{ "listen": "test", "script": { "exec": ["const j = pm.response.json(); if (j.accessToken) pm.collectionVariables.set('accessToken', j.accessToken);"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"dispatcher@tms.com\",\n  \"password\": \"Dispatch@123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Login (Driver 1)",
+          "event": [{ "listen": "test", "script": { "exec": ["const j = pm.response.json(); if (j.accessToken) pm.collectionVariables.set('accessToken', j.accessToken);"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"driver1@tms.com\",\n  \"password\": \"Driver@123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Login (Customer 1)",
+          "event": [{ "listen": "test", "script": { "exec": ["const j = pm.response.json(); if (j.accessToken) pm.collectionVariables.set('accessToken', j.accessToken);"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"customer1@tms.com\",\n  \"password\": \"Customer@123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Register (Customer)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"newcustomer@tms.com\",\n  \"password\": \"Customer@123\",\n  \"full_name\": \"Alex Rivera\",\n  \"phone\": \"+1-555-0400\",\n  \"company_name\": \"Rivera Freight Co.\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "register"] }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/refresh", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "refresh"] }
+          }
+        },
+        {
+          "name": "Get Current User (/me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/me", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "me"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/logout", "host": ["{{baseUrl}}"], "path": ["api", "v1", "auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicles",
+      "item": [
+        {
+          "name": "List Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles?page=1&limit=20", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vehicles"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] }
+          }
+        },
+        {
+          "name": "Create Vehicle",
+          "event": [{ "listen": "test", "script": { "exec": ["const j = pm.response.json(); if (j.id) pm.collectionVariables.set('vehicleId', j.id);"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"reg_number\": \"FF-5001-TX\",\n  \"vin\": \"1FTFW1ET000050001\",\n  \"make\": \"Volvo\",\n  \"model\": \"VNL 760\",\n  \"year\": 2024,\n  \"vehicle_type\": \"semi_truck\",\n  \"capacity_kg\": 20000,\n  \"insurance_expiry\": \"2028-12-31\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vehicles"] }
+          }
+        },
+        {
+          "name": "Get Vehicle",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles/{{vehicleId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vehicles", "{{vehicleId}}"] }
+          }
+        },
+        {
+          "name": "Update Vehicle",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"odometer_km\": 15250.5\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles/{{vehicleId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vehicles", "{{vehicleId}}"] }
+          }
+        },
+        {
+          "name": "Soft Delete Vehicle",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles/{{vehicleId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vehicles", "{{vehicleId}}"] }
+          }
+        },
+        {
+          "name": "Get Vehicle Maintenance",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles/{{vehicleId}}/maintenance", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vehicles", "{{vehicleId}}", "maintenance"] }
+          }
+        },
+        {
+          "name": "Add Vehicle Maintenance",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"maintenance_type\": \"routine\",\n  \"description\": \"Oil and filter replacement\",\n  \"cost\": 450.00,\n  \"status\": \"in_progress\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles/{{vehicleId}}/maintenance", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vehicles", "{{vehicleId}}", "maintenance"] }
+          }
+        },
+        {
+          "name": "Get Vehicle Stats",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/vehicles/{{vehicleId}}/stats", "host": ["{{baseUrl}}"], "path": ["api", "v1", "vehicles", "{{vehicleId}}", "stats"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Drivers",
+      "item": [
+        {
+          "name": "List Drivers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/drivers?page=1&limit=20", "host": ["{{baseUrl}}"], "path": ["api", "v1", "drivers"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] }
+          }
+        },
+        {
+          "name": "Create Driver",
+          "event": [{ "listen": "test", "script": { "exec": ["const j = pm.response.json(); if (j.id) pm.collectionVariables.set('driverId', j.id);"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"driver11@tms.com\",\n  \"password\": \"Driver@123\",\n  \"full_name\": \"Jordan Miles\",\n  \"phone\": \"+1-555-0299\",\n  \"license_number\": \"DL-FF-00099\",\n  \"license_class\": \"CDL-A\",\n  \"license_expiry\": \"2029-12-31\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/drivers", "host": ["{{baseUrl}}"], "path": ["api", "v1", "drivers"] }
+          }
+        },
+        {
+          "name": "Get Driver",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/drivers/{{driverId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "drivers", "{{driverId}}"] }
+          }
+        },
+        {
+          "name": "Update Driver Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"suspended\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/drivers/{{driverId}}/status", "host": ["{{baseUrl}}"], "path": ["api", "v1", "drivers", "{{driverId}}", "status"] }
+          }
+        },
+        {
+          "name": "Get Driver Performance",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/drivers/{{driverId}}/performance", "host": ["{{baseUrl}}"], "path": ["api", "v1", "drivers", "{{driverId}}", "performance"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Routes",
+      "item": [
+        {
+          "name": "List Routes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/routes?page=1&limit=20", "host": ["{{baseUrl}}"], "path": ["api", "v1", "routes"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] }
+          }
+        },
+        {
+          "name": "Create Route",
+          "event": [{ "listen": "test", "script": { "exec": ["const j = pm.response.json(); if (j.id) pm.collectionVariables.set('routeId', j.id);"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"RT-009\",\n  \"name\": \"Central Texas Run\",\n  \"origin\": \"Austin, TX\",\n  \"destination\": \"San Antonio, TX\",\n  \"distance_km\": 130,\n  \"estimated_duration_hrs\": 1.5,\n  \"base_rate_per_km\": 2.6\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/routes", "host": ["{{baseUrl}}"], "path": ["api", "v1", "routes"] }
+          }
+        },
+        {
+          "name": "Get Route",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/routes/{{routeId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "routes", "{{routeId}}"] }
+          }
+        },
+        {
+          "name": "Update Route",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"base_rate_per_km\": 2.75\n}" },
+            "url": { "raw": "{{baseUrl}}/api/v1/routes/{{routeId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "routes", "{{routeId}}"] }
+          }
+        },
+        {
+          "name": "Soft Delete Route",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/routes/{{routeId}}", "host": ["{{baseUrl}}"], "path": ["api", "v1", "routes", "{{routeId}}"] }
+          }
+        },
+        {
+          "name": "Get Route Stats",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/routes/{{routeId}}/stats", "host": ["{{baseUrl}}"], "path": ["api", "v1", "routes", "{{routeId}}", "stats"] }
+          }
+        }
+      ]
+    }
+  ]
+}

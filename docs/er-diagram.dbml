@@ -1,0 +1,168 @@
+// FleetFlow TMS — Database Schema (DBML)
+// Paste into https://dbdiagram.io to export docs/ERD.png
+
+Table users {
+  id uuid [pk]
+  email varchar [unique, not null]
+  password_hash text [not null]
+  full_name varchar [not null]
+  phone varchar
+  user_type varchar [not null]
+  is_active boolean [default: true]
+  failed_attempts int [default: 0]
+  locked_until timestamptz
+  last_login_at timestamptz
+  settings jsonb
+  created_at timestamptz
+  updated_at timestamptz
+}
+
+Table driver_profiles {
+  id uuid [pk]
+  user_id uuid [unique, ref: - users.id]
+  license_number varchar [unique, not null]
+  license_class varchar [not null]
+  license_expiry date [not null]
+  hire_date date
+  rating numeric
+  status varchar
+}
+
+Table customer_profiles {
+  id uuid [pk]
+  user_id uuid [unique, ref: - users.id]
+  company_name varchar [not null]
+  tax_id varchar
+  billing_address text [not null]
+  credit_limit numeric
+  payment_terms_days int
+}
+
+Table vehicles {
+  id uuid [pk]
+  reg_number varchar [unique, not null]
+  vin varchar [unique, not null]
+  make varchar
+  model varchar
+  year int
+  vehicle_type varchar
+  capacity_kg numeric
+  fuel_type varchar
+  odometer_km numeric
+  status varchar
+  insurance_expiry date
+  fitness_expiry date
+}
+
+Table routes {
+  id uuid [pk]
+  code varchar [unique, not null]
+  name varchar
+  origin varchar
+  destination varchar
+  distance_km numeric
+  estimated_duration_hrs numeric
+  base_rate_per_km numeric
+  is_active boolean
+}
+
+Table trips {
+  id uuid [pk]
+  trip_number varchar [unique, not null]
+  vehicle_id uuid [ref: > vehicles.id]
+  driver_id uuid [ref: > driver_profiles.id]
+  route_id uuid [ref: > routes.id]
+  dispatcher_id uuid [ref: > users.id]
+  status varchar
+  scheduled_start timestamptz
+  scheduled_end timestamptz
+  actual_start timestamptz
+  actual_end timestamptz
+  current_lat numeric
+  current_lng numeric
+  last_location_update timestamptz
+}
+
+Table bookings {
+  id uuid [pk]
+  booking_reference varchar [unique, not null]
+  customer_id uuid [ref: > customer_profiles.id]
+  trip_id uuid [ref: > trips.id]
+  origin varchar
+  destination varchar
+  cargo_description text
+  weight_kg numeric
+  quoted_price numeric
+  status varchar
+  invoice_number varchar [unique]
+  delivered_at timestamptz
+}
+
+Table tracking_events {
+  id uuid [pk]
+  trip_id uuid [ref: > trips.id]
+  event_type varchar
+  latitude numeric
+  longitude numeric
+  speed_kmh numeric
+  location_name varchar
+  occurred_at timestamptz
+}
+
+Table maintenance_records {
+  id uuid [pk]
+  vehicle_id uuid [ref: > vehicles.id]
+  maintenance_type varchar
+  description text
+  cost numeric
+  service_date date
+  next_service_date date
+  status varchar
+}
+
+Table fuel_logs {
+  id uuid [pk]
+  vehicle_id uuid [ref: > vehicles.id]
+  driver_id uuid [ref: > driver_profiles.id]
+  trip_id uuid [ref: > trips.id]
+  liters numeric
+  cost_per_liter numeric
+  total_cost numeric
+  odometer_km numeric
+  fueled_at timestamptz
+}
+
+Table refresh_tokens {
+  id uuid [pk]
+  user_id uuid [ref: > users.id]
+  token_hash text [unique]
+  expires_at timestamptz
+  revoked_at timestamptz
+}
+
+Table login_audit_log {
+  id uuid [pk]
+  user_id uuid [ref: > users.id]
+  email varchar
+  success boolean
+  failure_reason text
+  ip_address inet
+  occurred_at timestamptz
+}
+
+Table password_reset_tokens {
+  id uuid [pk]
+  user_id uuid [ref: > users.id]
+  token_hash text [unique]
+  expires_at timestamptz
+  used_at timestamptz
+}
+
+Table notifications {
+  notif_id uuid [pk]
+  user_id uuid [ref: > users.id]
+  type varchar
+  message text
+  read boolean
+  created_at timestamptz
+}

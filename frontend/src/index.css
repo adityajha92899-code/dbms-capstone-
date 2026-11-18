@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-surface text-slate-900 antialiased font-sans;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-accent/60 ring-offset-1;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent/40 disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-obsidian-900 hover:bg-accent-hover font-semibold shadow-sm;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-obsidian-800 border border-obsidian-200 hover:bg-obsidian-50;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-obsidian-700 hover:bg-obsidian-100;
+  }
+  .btn-danger {
+    @apply btn bg-status-danger text-white hover:bg-red-600;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-obsidian-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-obsidian-400 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:bg-obsidian-50 disabled:text-obsidian-400;
+  }
+
+  .card {
+    @apply rounded-lg border border-obsidian-200 bg-surface-card p-5 shadow-sm;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize;
+  }
+}
+
+/* Custom thin obsidian scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1E293B;
+}
+
+/* Print stylesheet for invoices */
+@media print {
+  aside,
+  header.no-print,
+  button,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  .card {
+    border: 1px solid #CBD5E1 !important;
+    box-shadow: none !important;
+  }
+}
