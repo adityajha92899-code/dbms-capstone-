@@ -54,7 +54,14 @@ export function LoginPage() {
       toast.success(`Welcome back, ${user.full_name}`);
       navigate(ROLE_HOME[user.role] || '/admin/dashboard');
     } catch (err) {
-      const msg = err.response?.data?.error || 'Invalid credentials';
+      let msg = 'Invalid credentials';
+      if (!err.response || err.code === 'ERR_NETWORK') {
+        msg = 'Cannot connect to backend server. Make sure your backend is running and VITE_API_URL is configured.';
+      } else if (err.response?.status === 404) {
+        msg = 'Backend API endpoint not found. Please check VITE_API_URL in your environment variables.';
+      } else if (err.response?.data?.error) {
+        msg = err.response.data.error;
+      }
       setServerError(msg);
       toast.error(msg);
     }

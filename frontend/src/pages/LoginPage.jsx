@@ -32,7 +32,11 @@ export function LoginPage() {
       toast.success(`Welcome back, ${user.full_name}`);
       navigate(ROLE_HOME[user.role] || '/');
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Invalid credentials');
+      const msg =
+        !err.response || err.code === 'ERR_NETWORK'
+          ? 'Cannot connect to backend server. Make sure VITE_API_URL is configured.'
+          : err.response?.data?.error || 'Invalid credentials';
+      toast.error(msg);
     }
   };
 
