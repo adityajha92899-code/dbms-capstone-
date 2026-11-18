@@ -184,28 +184,3 @@ cd frontend && npm test
 
 ---
 
-## Pre-Submission Verification
-
-- [ ] `docker compose up -d` starts everything
-- [ ] All 6 demo logins work
-- [ ] Admin dashboard shows KPIs
-- [ ] Creating overlapping trip returns 409
-- [ ] Driver sees only own trips
-- [ ] Customer sees only own bookings
-- [ ] Live map updates via socket
-- [ ] CSV export downloads
-- [ ] Password reset works
-- [ ] Audit log shows login attempts
-- [ ] Test suite passes (backend + frontend)
-- [ ] README complete
-
----
-
-## Known Limitations & Future Work
-
-- Route map polylines currently use corridor anchor coordinates; integrating a geocoding/routing API (e.g., OSRM or Mapbox) will render turn-by-turn road geometry.
-- Automated email delivery for password resets and maintenance alerts can be connected via SMTP/SendGrid in a future phase.
-
-## Credits & License
-
-Built as the **FleetFlow TMS** capstone project. Licensed under the MIT License.
