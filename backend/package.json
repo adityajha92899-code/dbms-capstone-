@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "migrate": "psql \"${DATABASE_URL:-postgresql://tms_user:tms_pass@localhost:5432/tms_db}\" -v ON_ERROR_STOP=1 -f db/schema.sql -f db/triggers.sql -f db/views.sql -f db/indexes.sql",
-    "seed": "psql \"${DATABASE_URL:-postgresql://tms_user:tms_pass@localhost:5432/tms_db}\" -v ON_ERROR_STOP=1 -f db/seed.sql",
+    "db:setup": "node src/migrate.js --seed",
+    "migrate": "node src/migrate.js",
+    "seed": "node src/migrate.js --seed",
     "test": "jest --runInBand",
     "test:ci": "jest --runInBand --ci --coverage"
   },

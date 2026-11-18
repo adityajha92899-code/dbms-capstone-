@@ -1,6 +1,9 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
+let SOCKET_URL = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || window.location.origin;
+if (SOCKET_URL && !SOCKET_URL.startsWith('http://') && !SOCKET_URL.startsWith('https://') && !SOCKET_URL.startsWith('ws://') && !SOCKET_URL.startsWith('wss://')) {
+  SOCKET_URL = `https://${SOCKET_URL}`;
+}
 
 let socket = null;
 

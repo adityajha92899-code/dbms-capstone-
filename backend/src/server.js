@@ -28,9 +28,22 @@ const app = express();
 
 // Security & middleware
 app.use(helmet());
+const allowedOrigins = config.corsOrigin
+  ? config.corsOrigin.split(',').map((o) => o.trim())
+  : ['http://localhost:5173', 'http://localhost'];
+
 app.use(
   cors({
-    origin: config.corsOrigin,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      // Allow render.com and localhost subdomains
+      if (/https:\/\/.*\.onrender\.com$/.test(origin) || /http:\/\/localhost(:\d+)?$/.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );

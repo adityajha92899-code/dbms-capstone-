@@ -11,7 +11,7 @@ let io = null;
 function initSocket(httpServer) {
   io = new Server(httpServer, {
     cors: {
-      origin: config.corsOrigin,
+      origin: (origin, callback) => callback(null, true),
       credentials: true,
     },
   });
